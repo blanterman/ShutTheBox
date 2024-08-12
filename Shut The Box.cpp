@@ -1,3 +1,21 @@
+/*	
+	Shut the box dice game using Horstmann Graphics Libraries
+	By Bryson Lanterman
+	Version 1.1
+	August 18, 2024
+
+	V1.1 Updates:
+		- Computer_Player.cpp: 
+			+ Removes old valid man-selection finder function that only searced upto 4 elements.
+			+ Fixes error in current man-selection finder functions.
+			+ Removes strategy 3 and puts 4 to 3 because it wasn't really implemented.
+			+ Adds strategy getter. Not used, but it was used to debug.
+		- STB_Game.cpp:
+			+ Fixes bug in constructor that wasn't allowing computer strategy to be set by user.
+		- "Shut The Box.cpp":
+			+ Updates user menu to show updated strategies
+*/
+
 #include "ccc_win.h"
 #include "STB_Game.h"
 #include <ctime>
@@ -15,11 +33,9 @@ static void welcome_screen()
 
 	string strategy1_1 = "1 always selects the option with the lowest quantity of men and the highest";
 	string strategy1_2 = "value man.";
-	string strategy2_1 = "2 always selects the option with the lowest quantity of men, but with the";
-	string strategy2_2 = "highest lower value if multiple.";
-	string strategy3_1 = "3 always selects the option with the largest quantity of men with the lowest";
-	string strategy3_2 = "values";
-	string strategy4 = "4 random available choice";
+	string strategy2_1 = "2 always selects the option with the largest quantity of men with the lowest";
+	string strategy2_2 = "values";
+	string strategy3 = "3 random available choice";
 
 	cwin.clear();
 
@@ -30,11 +46,9 @@ static void welcome_screen()
 	Message messStrategy1_2(Point(12.0, 260.0), strategy1_2);
 	Message messStrategy2_1(Point(12.0, 250.0), strategy2_1);
 	Message messStrategy2_2(Point(12.0, 240.0), strategy2_2);
-	Message messStrategy3_1(Point(12.0, 230.0), strategy3_1);
-	Message messStrategy3_2(Point(12.0, 220.0), strategy3_2);
-	Message messStrategy4(Point(12.0, 210.0), strategy4);
+	Message messStrategy3(Point(12.0, 230.0), strategy3);
 
-	cwin << welcome << strategyMenu << messStrategy1_1 << messStrategy1_2 << messStrategy2_1 << messStrategy2_2 << messStrategy3_1 << messStrategy3_2  << messStrategy4;
+	cwin << welcome << strategyMenu << messStrategy1_1 << messStrategy1_2 << messStrategy2_1 << messStrategy2_2 << messStrategy3;
 }
 
 int ccc_win_main()
@@ -42,9 +56,8 @@ int ccc_win_main()
 	bool cont = true;
 	bool computerPlayer = false;
 	int strategy = 1;	// 1 always selects the option with the lowest quantity of men and the highest value man.
-						// 2 always selects the option with the lowest quantity of men, but with the highest lower value if the quantity of men > 1
-						// 3 always selects the option with the largest quantity of men with the lowest values
-						// 4 random available choice
+						// 2 always selects the option with the largest quantity of men with the lowest values
+						// 3 random available choice
 	long maxGames = 0;
 	int diceTotal = 0;
 	long long numGames = 0;

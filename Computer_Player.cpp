@@ -81,6 +81,7 @@ void part2(std::vector<int> indeces, const std::vector<int>& vals, int value, st
 		}
 		if (sum == value)
 		{
+			valsAtIndeces.clear();
 			for (int i = 0; i < indeces.size(); i++)
 			{
 				valsAtIndeces.push_back(vals[indeces[i]]);
@@ -103,133 +104,6 @@ std::vector<std::vector<int>> part(const std::vector<int>& vals, int value)
 	{
 		indeces.push_back(i);
 		part2(indeces, vals, value, parts);
-	}
-	return parts;
-}
-
-vector<vector<int>> get_partitions2(const std::vector<int>& vals, int value)
-{
-	int total = 0;
-	int first = 0;
-	int second = 0;
-	int third = 0;
-	int fourth = 0;
-
-	vector<vector<int>> parts;
-	vector<int> factors;
-
-	int maxFactors = 0;
-	maxFactors = max_factors(vals, value);
-	
-	// quadruples
-	if (maxFactors >= 4)
-	{
-		for (int i = 0; i < vals.size(); i++)
-		{
-			first = vals[i];
-			for (int j = i; j < vals.size() - 1; j++)
-			{
-				second = vals[j + 1];
-				for (int k = j; k < vals.size() - 2; k++)
-				{
-					third = vals[k + 2];
-					for (int m = k; m < vals.size() - 3; m++)
-					{
-						fourth = vals[m + 3];
-						total = first + second + third + fourth;
-						factors.clear();
-						if (total == value)
-						{
-							factors.push_back(first);
-							factors.push_back(second);
-							factors.push_back(third);
-							factors.push_back(fourth);
-							parts.push_back(factors);
-						}
-						if (total > value)
-						{
-							m = vals.size() - 3;
-						}
-					}
-				}
-			
-			}
-		}
-	}
-	// triples
-	if (maxFactors >= 3)
-	{
-		for (int i = 0; i < vals.size(); i++)
-		{
-			first = vals[i];
-			for (int j = i; j < vals.size() - 1; j++)
-			{
-				second = vals[j + 1];
-				for (int k = j; k < vals.size() - 2; k++)
-				{
-					third = vals[k + 2];
-					total = first + second + third;
-					factors.clear();
-					if (total == value)
-					{
-						factors.push_back(first);
-						factors.push_back(second);
-						factors.push_back(third);
-						parts.push_back(factors);
-					}
-					if (total > value) 
-					{
-						k = vals.size() - 2;
-					}
-				}
-			}
-		}
-	}
-	
-	// doubles
-	if (maxFactors >= 2)
-	{
-		for (int i = 0; i < vals.size(); i++)
-		{
-			first = vals[i];
-			for (int j = i; j < vals.size() - 1; j++)
-			{
-				second = vals[j + 1];
-				total = first + second;
-				factors.clear();
-				if (total == value)
-				{
-					factors.push_back(first);
-					factors.push_back(second);
-					parts.push_back(factors);
-				}
-				if (total > value)  
-				{
-					j = vals.size() - 1;
-				}
-				
-			}
-		}
-	}
-	//singles
-	if (maxFactors >= 1)
-	{
-		for (int i = 0; i < vals.size(); i++)
-		{
-			first = vals[i];
-			total = first;
-			factors.clear();
-			if (total == value)
-			{
-				factors.push_back(first);
-				parts.push_back(factors);
-			}
-			if (total > value) 
-			{
-				i = vals.size();
-			}
-			
-		}
 	}
 	return parts;
 }
@@ -262,6 +136,11 @@ Point Computer_Player::dice_roll()
 	return Point(13.0, 111.0);
 }
 
+int Computer_Player::Get_Strategy()
+{
+	return strategy;
+}
+
 vector<Point> Computer_Player::select_men(vector<int> unselectedMen, int diceTotal, int manWidth, int space)
 {
 	vector<vector<int>> options;
@@ -272,20 +151,14 @@ vector<Point> Computer_Player::select_men(vector<int> unselectedMen, int diceTot
 		options = part(unselectedMen, diceTotal);
 		selection_vals = options[0];
 	}
-	// A little worse than strategy 1
+	// Worst Strategy I have found.
 	if (strategy == 2)
-	{
-		options = get_partitions2(unselectedMen, diceTotal);
-		selection_vals = options[options.size() - 1];
-	}
-	// Worse Strategy
-	if (strategy == 3)
 	{
 		options = part(unselectedMen, diceTotal);
 		selection_vals = options[options.size() - 1];
 	}
 	// Random Strategy
-	if (strategy == 4)
+	if (strategy == 3)
 	{
 		options = part(unselectedMen, diceTotal);
 		selection_vals = options[rand() % options.size()];

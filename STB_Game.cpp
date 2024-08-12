@@ -16,7 +16,8 @@ STB_Game::STB_Game(int numMen, int strategy, bool computerPlayer)
 	dieCount = ceil(static_cast<double>(manCount) / 6.0);
 	STB_Board initialBoard(manCount, dieCount);
 	gameBoard = initialBoard;
-	Computer_Player player(strategy);
+	Computer_Player initialPlayer(strategy);
+	player = initialPlayer;
 	computerPlayerActive = computerPlayer;
 }
 

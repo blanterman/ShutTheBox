@@ -19,6 +19,11 @@ public:
 	*/
 	Point dice_roll();
 	/**
+		Gets the players strategy
+		@return integer strategy of the player
+	*/
+	int Get_Strategy();
+	/**
 		Chooses the men for the current move
 		@param unselectedMen vector of values of the men still left on the board
 		@param diceTotal total currently showing on dice to match by selecting men
